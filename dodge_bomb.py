@@ -57,6 +57,22 @@ def gameover(screen: pg.Surface) -> None:  # 課題１
     time.sleep(5)
 
 
+def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:  # 課題３
+    """
+    時間とともに爆弾が拡大、加速させる関数
+    """
+    bb_imgs = []
+    bb_accs = []
+
+    for r in range(1, 11):  # 1〜10段階
+        bb_img = pg.Surface((20*r, 20*r))
+        pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
+        bb_img.set_colorkey((0, 0, 0))
+        bb_imgs.append(bb_img)
+    bb_accs = [a for a in range(1, 11)]
+    return bb_imgs, bb_accs
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -72,6 +88,8 @@ def main():
     bb_rct.centerx = random.randint(0, WIDTH)  # 初期座標の設定
     bb_rct.centery = random.randint(0, HEIGHT)
     vx, vy = +5, +5  # 爆弾の速度
+
+    bb_imgs, bb_accs = init_bb_imgs()  # 課題２ 呼び出し
 
     clock = pg.time.Clock()
     tmr = 0
@@ -106,12 +124,21 @@ def main():
         if check_bound(kk_rct) != (True, True):  # 位置の判定
             kk_rct.move_ip(-sum_mv[0],-sum_mv[1])
         screen.blit(kk_img, kk_rct)
-        bb_rct.move_ip(vx, vy)  # 爆弾を移動させる
+        #bb_rct.move_ip(vx, vy)  # 爆弾を移動させる
         yoko, tate = check_bound(bb_rct)  # 爆弾の反射
         if not yoko:
             vx *= -1
         if not tate:
             vy *= -1
+        
+        bb_img = bb_imgs[min(tmr // 500, 9)]  # 課題２ 加速
+        acc = bb_accs[min(tmr // 500, 9)]
+        avx = vx * acc
+        avy = vy * acc
+        bb_rct.width = bb_img.get_rect().width
+        bb_rct.height = bb_img.get_rect().height
+        bb_rct.move_ip(avx, avy)
+
         screen.blit(bb_img, bb_rct)  # 爆弾の表示
 
         pg.display.update()
