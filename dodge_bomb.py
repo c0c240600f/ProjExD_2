@@ -64,7 +64,7 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:  # 課題３
     bb_imgs = []
     bb_accs = []
 
-    for r in range(1, 11):  # 1〜10段階
+    for r in range(1, 11):  # 1〜10段階の大きさと速度
         bb_img = pg.Surface((20*r, 20*r))
         pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
         bb_img.set_colorkey((0, 0, 0))
