@@ -41,11 +41,11 @@ def gameover(screen: pg.Surface) -> None:  # 課題１
     font = pg.font.Font(None, 80)  # 1-3
     text = font.render("Game Over", True, (255, 255, 255))
     text_rect = text.get_rect(center=(WIDTH//2, HEIGHT//2))
-    kk_dead = pg.image.load("fig/0.png")
+    kk_dead = pg.image.load("fig/8.png")
     kk_dead = pg.transform.rotozoom(kk_dead, 0, 0.9)
     kk_rct = kk_dead.get_rect()
     kk_rct.center = (WIDTH//2 -200, HEIGHT//2)
-    kk_dead_2 = pg.image.load("fig/0.png")
+    kk_dead_2 = pg.image.load("fig/8.png")
     kk_dead_2 = pg.transform.rotozoom(kk_dead_2, 0, 0.9)
     kk_rct_2 = kk_dead_2.get_rect()
     kk_rct_2.center = (WIDTH//2 +200, HEIGHT//2)
@@ -74,6 +74,9 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:  # 課題３
 
 
 def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
+    """
+    進行方向への向き
+    """
     base = pg.image.load("fig/2.png")
     kk_dict = {}
 
