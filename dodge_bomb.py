@@ -73,6 +73,36 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:  # 課題３
     return bb_imgs, bb_accs
 
 
+def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
+    base = pg.image.load("fig/2.png")
+    kk_dict = {}
+
+    kk_dict[(+5, 0)]  = pg.transform.rotozoom(base, 0, 1.0)
+    kk_dict[(+5,-5)]  = pg.transform.rotozoom(base, 45, 1.0)
+    kk_dict[(0,-5)]   = pg.transform.rotozoom(base, 90, 1.0)
+    kk_dict[(+5,+5)]  = pg.transform.rotozoom(base, -45, 1.0)
+    kk_dict[(0,+5)]   = pg.transform.rotozoom(base, -90, 1.0)
+
+    kk_dict[(-5, 0)]  = pg.transform.flip(
+        pg.transform.rotozoom(base, 0, 1.0),
+        True, False
+    )
+
+    kk_dict[(-5,-5)]  = pg.transform.flip(
+        pg.transform.rotozoom(base, 45, 1.0),
+        True, False
+    )
+
+    kk_dict[(-5,+5)]  = pg.transform.flip(
+        pg.transform.rotozoom(base, -45, 1.0),
+        True, False
+    )
+
+    kk_dict[(0, 0)] = pg.transform.rotozoom(base, 0, 1.0)
+
+    return kk_dict
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -90,6 +120,7 @@ def main():
     vx, vy = +5, +5  # 爆弾の速度
 
     bb_imgs, bb_accs = init_bb_imgs()  # 課題２ 呼び出し
+    kk_imgs = get_kk_imgs()  #課題３
 
     clock = pg.time.Clock()
     tmr = 0
@@ -119,7 +150,7 @@ def main():
             if key_lst[key]:
                 sum_mv[0] += mv[0]  #横方向
                 sum_mv[1] += mv[1]  #縦方向
-    
+        kk_img = kk_imgs[tuple(sum_mv)]
         kk_rct.move_ip(sum_mv)
         if check_bound(kk_rct) != (True, True):  # 位置の判定
             kk_rct.move_ip(-sum_mv[0],-sum_mv[1])
@@ -140,6 +171,8 @@ def main():
         bb_rct.move_ip(avx, avy)
 
         screen.blit(bb_img, bb_rct)  # 爆弾の表示
+
+        sum_mv = [0, 0]
 
         pg.display.update()
         tmr += 1
